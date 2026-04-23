@@ -1,0 +1,93 @@
+# Smart Recipe Ontology - SPARQL Queries
+# Competency Questions CQ1-CQ5
+# Run in GraphDB or Protégé
+
+PREFIX sro:    <https://example.org/sro#>
+PREFIX inst:   <https://www.example.org/abox#>
+PREFIX foodon: <http://purl.obolibrary.org/obo/>
+PREFIX qudt:   <https://qudt.org/schema/qudt/>
+PREFIX time:   <https://www.w3.org/TR/owl-time/#>
+PREFIX schema: <http://schema.org/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+
+#################################################################
+# CQ1: Which recipes are vegetarian/vegan?
+#################################################################
+
+SELECT DISTINCT ?recipeName
+WHERE {
+    ?recipe a foodon:FOODON_00004081 ;
+            rdfs:label ?recipeName .
+    FILTER NOT EXISTS {
+        ?recipe sro:usesIngredient ?ingredient .
+        ?ingredient sro:referencesFoodProduct ?food .
+        ?food a foodon:FOODON_00004242 .
+    }
+}
+ORDER BY ?recipeName
+
+
+#################################################################
+# CQ2: Which recipes use specific ingredients?
+#################################################################
+
+SELECT DISTINCT ?recipeName
+WHERE {
+    ?recipe a foodon:FOODON_00004081 ;
+            rdfs:label ?recipeName ;
+            sro:usesIngredient ?ingredient1 ;
+            sro:usesIngredient ?ingredient2 .
+    ?ingredient1 sro:referencesFoodProduct inst:Tomato .
+    ?ingredient2 sro:referencesFoodProduct inst:Garlic .
+}
+ORDER BY ?recipeName
+
+
+#################################################################
+# CQ3: Which ingredients are used in a recipe?
+#################################################################
+
+SELECT DISTINCT ?recipeName ?ingredientName
+                ?quantity ?unit
+WHERE {
+    ?recipe a foodon:FOODON_00004081 ;
+            rdfs:label ?recipeName ;
+            sro:usesIngredient ?ingredient .
+    ?ingredient rdfs:label ?ingredientName ;
+                qudt:quantityValue ?quantityValue .
+    ?quantityValue qudt:numericValue ?quantity ;
+                   qudt:hasUnit ?unitRef .
+    ?unitRef rdfs:label ?unit .
+    FILTER(?recipeName = "Herb Omelette"@en)
+}
+ORDER BY ?ingredientName
+
+
+#################################################################
+# CQ4: How many calories does a recipe have per 100g?
+#################################################################
+SELECT DISTINCT ?recipeName ?calories
+WHERE {
+    ?recipe a foodon:FOODON_00004081 ;
+            rdfs:label ?recipeName ;
+            sro:hasNutritionalInformation ?nutrition .
+    ?nutrition qudt:quantityValue ?caloriesValue ;
+               qudt:hasUnit ?unitRef .
+    ?unitRef rdfs:label "kcal/100g"@en .
+    ?caloriesValue qudt:numericValue ?calories .
+}
+ORDER BY ?recipeName    
+##################################################################
+# CQ5: How long does a recipe take?
+##################################################################
+SELECT DISTINCT ?recipeName ?duration
+WHERE {
+    ?recipe a foodon:FOODON_00004081 ;
+            rdfs:label ?recipeName ;
+            sro:hasPreparationTime ?timeInterval .
+    ?timeInterval time:hasDuration ?durationValue ;
+                  time:hasUnit ?unitRef .
+    ?unitRef rdfs:label "minutes"@en .
+    ?durationValue qudt:numericValue ?duration .
+}
+ORDER BY ?recipeName  
