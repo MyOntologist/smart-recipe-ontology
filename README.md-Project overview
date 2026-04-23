@@ -1,0 +1,64 @@
+# Smart Recipe Ontology (SRO)
+
+The Smart Recipe Ontology (SRO) is a structured way to organize and share cooking information. It helps computers understand recipes just like people do—breaking them down into steps, ingredients, specific amounts, and nutritional facts.
+
+With this model, you can easily filter recipes by diet (like vegan or vegetarian), track calorie counts, or search for dishes based on how much time you have to cook.
+
+## Why this exists
+
+We built this ontology to make it easier to:
+* **Search with precision:** Find recipes that fit specific dietary needs or calorie goals.
+* **Get organized:** See recipes as a logical flow of ordered steps.
+* **Standardize data:** Use common terms for ingredients and measurements so different apps can talk to each other.
+
+**Who is it for?** Developers and creators building cooking apps, meal planners, or smart kitchen tools.
+
+---
+
+## How it's built
+
+The SRO doesn't reinvent the wheel. It connects with well-known systems like **FoodON** for food names, **QUDT** for measurements, and **OWL Time** for durations.
+
+### Key Classes
+* **Recipe:** The main dish profile.
+* **Recipe Step:** A single action in the cooking process.
+* **Food Product:** The actual ingredients used.
+* **Quantity & Duration:** How much of an ingredient and how long it takes.
+
+---
+
+## Folder Structure
+
+* **ontology/**: Contains the core files (the "logic" and the "data").
+* **requirements/**: The goals and questions this project was designed to answer.
+* **docs/**: Detailed guides and visual diagrams.
+* **queries/**: Example SPARQL code to help you pull data out.
+* **evaluation/**: Reports on the quality and accuracy of the model.
+
+---
+
+## Example Recipes Included
+
+We have included three examples to show you how it works:
+1. **Herb Omelette:** A simple vegetarian dish with 3 steps (10 mins).
+2. **Pasta with Tomato Sauce:** A vegan-friendly staple (27 mins).
+3. **Spaghetti with Tomato Sauce:** A slightly more detailed version (34 mins).
+
+---
+
+## Getting Started
+
+### 1. Open in Protégé
+If you use Protégé, just open `ontology/tbox/sro-labelled.ttl` to explore the structure.
+
+### 2. Using Python
+You can load the ontology into your code using the `rdflib` library:
+
+```python
+from rdflib import Graph
+
+g = Graph()
+g.parse("ontology/tbox/sro-labelled.ttl", format="turtle")
+g.parse("ontology/abox/abox.ttl", format="turtle")
+
+print(f"Successfully loaded {len(g)} data points.")
