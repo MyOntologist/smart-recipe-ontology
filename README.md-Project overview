@@ -61,4 +61,10 @@ g = Graph()
 g.parse("ontology/tbox/sro-labelled.ttl", format="turtle")
 g.parse("ontology/abox/abox.ttl", format="turtle")
 
-print(f"Successfully loaded {len(g)} data points.")
+print(f"Successfully loaded {len(g)} data points.") 
+----
+### Acknowledgements
+- This project was developed as part of a course assignment
+- Original ontology structure guided by course instrutor Al-Hakam Hamdan
+- Developed following the (LOT Methodology)
+- Build with (Protege)
