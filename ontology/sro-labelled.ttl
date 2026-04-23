@@ -1,0 +1,97 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sro: <https://example.org/sro#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://example.org/sro> rdf:type owl:Ontology ;
+	dcterms:creator [
+      rdf:type foaf:Person ;
+      foaf:name "Afsara" ;
+    ] ;
+	owl:versionIRI <https://example.org/sro/0.1> ;
+	owl:versionInfo "0.1" ;
+	dcterms:description "Ontology that describes cooking recipes."@en ;
+	dcterms:license "https://creativecommons.org/licenses/by/1.0" ;
+	dcterms:modified "2026-04-20"^^xsd:date ;
+	dcterms:issued "2026-04-20"^^xsd:date ;
+	dcterms:title "Smart Recipe Ontology"@en ;
+	vann:preferredNamespacePrefix "sro" ;
+	vann:preferredNamespaceUri "https://example.org/sro#" .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+
+###  https://example.org/sro#hasRecipeStep
+sro:hasRecipeStep rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf <http://purl.obolibrary.org/obo/BFO_0000051> ;
+                  rdfs:domain <http://purl.obolibrary.org/obo/FOODON_00004081> ;
+                  rdfs:range sro:RecipeStep ;
+                  owl:propertyChainAxiom ( sro:hasRecipeStep
+                                           <http://purl.allotrope.org/ontologies/property#AFX_0002834>
+                                         ) ,
+                                         ( sro:hasRecipeStep
+                                           <http://purl.obolibrary.org/obo/BFO_0000063>
+                                         ) ;
+                  rdfs:comment "Defines the relationship between a food recipe and its corresponding recipe step."@en ;
+                  rdfs:label "has recipe step"@en .
+
+
+###  https://example.org/sro#referencesIngredient
+sro:referencesIngredient rdf:type owl:ObjectProperty ;
+                         rdfs:range <http://purl.obolibrary.org/obo/FOODON_00001002> ;
+                         rdfs:comment "Defines the relationship between an ingredient quantity definition and a referenced ingredient."@en ;
+                         rdfs:label "references ingredient"@en .
+
+
+###  https://example.org/sro#usesIngredient
+sro:usesIngredient rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf <http://purl.obolibrary.org/obo/ECO_9000001> ;
+                   owl:propertyChainAxiom ( sro:hasRecipeStep
+                                            sro:usesIngredient
+                                          ) ,
+                                          ( sro:usesIngredientQuantity
+                                            sro:referencesIngredient
+                                          ) ;
+                   rdfs:comment "Defines the relationship between a process (e.g. recipe or recipe step) and a used ingredient."@en ;
+                   rdfs:label "uses ingredient"@en .
+
+
+###  https://example.org/sro#usesIngredientQuantity
+sro:usesIngredientQuantity rdf:type owl:ObjectProperty ;
+                           rdfs:subPropertyOf <http://purl.obolibrary.org/obo/ECO_9000001> ;
+                           owl:propertyChainAxiom ( sro:hasRecipeStep
+                                                    sro:usesIngredientQuantity
+                                                  ) ;
+                           rdfs:comment "Defines the relationship between a process (e.g. recipe or recipe step) and a used ingredient quantity."@en ;
+                           rdfs:label "uses ingredient quantity"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+
+###  https://example.org/sro#hasCaloriesPer100g
+sro:hasCaloriesPer100g rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf <http://schema.org/calories> ;
+                       rdfs:comment "defines the calory count per 100 gram for an object (e.g. ingredient, food product, etc.)." ;
+                       rdfs:label "has calories per 100 gram"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+
+###  https://example.org/sro#RecipeStep
+sro:RecipeStep rdf:type owl:Class ;
+               rdfs:comment "An instruction that guides the cook on performing a specific task in the process of preparing a dish. Multiple recipe steps form a recipe." ;
+               rdfs:label "recipe step" .
